@@ -3,18 +3,15 @@ import cors from '@fastify/cors';
 import { z } from 'zod';
 import { FinanceService } from './modules/finance-service.js';
 
+
 const app = Fastify({ logger: true });
 
-await app.register(cors, {
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-});
+
 const finance = new FinanceService()
 const corsOrigin = process.env.CORS_ORIGIN ?? 'http://localhost:5173'
-
+await app.register(cors, {
+  origin: corsOrigin,
+});
 
 const entrySchema = z.object({
   date: z.string(),
@@ -69,4 +66,3 @@ app.get('/reports/ai-insights', async () => finance.getAiInsights());
 const port = Number(process.env.PORT ?? 3333);
 const host = process.env.HOST ?? '0.0.0.0';
 await app.listen({ port, host });
-
