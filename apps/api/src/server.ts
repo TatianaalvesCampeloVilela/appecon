@@ -1,15 +1,14 @@
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 import { z } from 'zod';
 import { FinanceService } from './modules/finance-service.js';
 
 const app = Fastify({ logger: true });
-const finance = new FinanceService();
-const corsOrigin = process.env.CORS_ORIGIN ?? '*';
 
-app.addHook('onRequest', async (_request, reply) => {
-  reply.header('Access-Control-Allow-Origin', corsOrigin);
-  reply.header('Access-Control-Allow-Headers', 'Content-Type');
-});
+
+const finance = new FinanceService()
+const corsOrigin = process.env.CORS_ORIGIN ?? 'http://localhost:5173'
+
 
 const entrySchema = z.object({
   date: z.string(),
